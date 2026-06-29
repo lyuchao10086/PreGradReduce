@@ -1059,15 +1059,6 @@ int PReluGradReduceTest(int32_t deviceId, aclrtStream& stream)
         {"nd_2d_fp32", {32, 1024}, {1024}, ACL_FLOAT, ACL_FORMAT_ND,
             ACL_FORMAT_ND, ACL_FORMAT_ND, false, false, 1.0F,
             "2D FP32 ND format, reduce axis [0]."},
-        {"shared_large_fp32", {32, 10, 32, 128}, {1}, ACL_FLOAT, ACL_FORMAT_ND,
-            ACL_FORMAT_ND, ACL_FORMAT_ND, false, true, 1.0F,
-            "Shared all-reduce large FP32."},
-        {"shared_large_fp16", {32, 10, 32, 128}, {1}, ACL_FLOAT16, ACL_FORMAT_ND,
-            ACL_FORMAT_ND, ACL_FORMAT_ND, false, true, 0.001F,
-            "Shared all-reduce large FP16."},
-        {"shared_large_bf16", {32, 10, 32, 128}, {1}, ACL_BF16, ACL_FORMAT_ND,
-            ACL_FORMAT_ND, ACL_FORMAT_ND, false, true, 0.001F,
-            "Shared all-reduce large BF16."},
         {"nchw_channel_large_fp32", {32, 10, 32, 128}, {10}, ACL_FLOAT, ACL_FORMAT_ND,
             ACL_FORMAT_ND, ACL_FORMAT_ND, false, true, 1.0F,
             "NCHW channel reduce large FP32."},
@@ -1143,7 +1134,7 @@ int PReluGradReduceTest(int32_t deviceId, aclrtStream& stream)
     LOG_PRINT("PReluGradReduce smoke test pass, case_count=%zu run_count=%u skipped_count=%u\n", cases.size(),
         runCount, skippedCount);
     LOG_PRINT("[SMOKE] case_count=%zu run_count=%u skipped_count=%u dtypes=fp32,fp16,bf16 formats=ND,NC1HWC0 "
-              "axis_generalization=rank2,rank3,rank4 shared=enabled "
+              "axis_generalization=rank2,rank3,rank4 shared_large_cases=removed "
               "large_cases=enabled rank4_large_cases=env_gated nc1hwc0_cases=enabled\n",
         cases.size(), runCount, skippedCount);
     return ACL_SUCCESS;

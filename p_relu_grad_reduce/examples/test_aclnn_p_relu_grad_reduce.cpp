@@ -1095,7 +1095,7 @@ int PReluGradReduceTest(int32_t deviceId, aclrtStream& stream)
     LOG_PRINT("PReluGradReduce smoke test pass, case_count=%zu run_count=%u skipped_count=%u\n", cases.size(),
         runCount, skippedCount);
     LOG_PRINT("[SMOKE] case_count=%zu run_count=%u skipped_count=%u dtypes=fp32,fp16,bf16 formats=ND "
-              "axis_generalization=rank2,rank3,rank4 shared=enabled "
+              "axis_generalization=rank2,rank3,rank4 shared_large_cases=removed "
               "large_cases=disabled nc1hwc0_cases=disabled\n",
         cases.size(), runCount, skippedCount);
     return ACL_SUCCESS;
