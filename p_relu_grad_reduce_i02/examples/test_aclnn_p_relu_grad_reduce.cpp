@@ -26,7 +26,7 @@
 #include <vector>
 #include "acl/acl.h"
 #include "acl/acl_op_compiler.h"
-#include "aclnn_p_relu_grad_reduce.h"
+#include "aclnn/aclnn_base.h"
 
 extern "C" void* dlopen(const char* filename, int flags) __attribute__((weak));
 extern "C" void* dlsym(void* handle, const char* symbol) __attribute__((weak));
