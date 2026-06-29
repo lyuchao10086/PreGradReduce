@@ -190,8 +190,9 @@ private:
         partialSumGm_.SetValue(blockIdx, partialSum);
         AscendC::PipeBarrier<PIPE_MTE3>();
 
-        // 2) 硬同步：等所有核都完成局部和写入
-        AscendC::SyncAll<true>();
+        // 2) 软同步：workspace 由 acl 调用侧清零，这里只等待各核完成局部和写入
+        AscendC::LocalTensor<int32_t> ubSync = syncUbBuf_.Get<int32_t>();
+        AscendC::SyncAll<true>(syncGm_, ubSync, static_cast<int32_t>(cn));
 
         // 3) 仅 core0 汇总并写最终结果
         if (blockIdx == 0) {
