@@ -1,0 +1,132 @@
+[
+  {
+    "case_name": "dim_20_32_125_fp16",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "float16", "shape": [20, 32, 125], "data_type": "float16", "format": "ND"},
+      {"name": "features", "type": "float16", "shape": [20, 32, 125], "data_type": "float16", "format": "ND"},
+      {"name": "weights",  "type": "float16", "shape": [1],           "data_type": "float16", "format": "ND"},
+      {"name": "updates",  "type": "float16", "shape": [20, 32, 125], "data_type": "float16", "format": "ND"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "float16", "shape": [1],           "data_type": "float16", "format": "ND"}
+    ]
+  },
+  {
+    "case_name": "dim_32_10_32_128_fp16",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "float16", "shape": [32, 10, 32, 128], "data_type": "float16", "format": "ND"},
+      {"name": "features", "type": "float16", "shape": [32, 10, 32, 128], "data_type": "float16", "format": "ND"},
+      {"name": "weights",  "type": "float16", "shape": [1],               "data_type": "float16", "format": "ND"},
+      {"name": "updates",  "type": "float16", "shape": [32, 10, 32, 128], "data_type": "float16", "format": "ND"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "float16", "shape": [1],               "data_type": "float16", "format": "ND"}
+    ]
+  },
+  {
+    "case_name": "dim_32_2_32_128_16_fp16",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "float16", "shape": [32, 2, 32, 128, 16], "data_type": "float16", "format": "NC1HWC0"},
+      {"name": "features", "type": "float16", "shape": [32, 2, 32, 128, 16], "data_type": "float16", "format": "NC1HWC0"},
+      {"name": "weights",  "type": "float16", "shape": [1, 1, 1, 1, 16],     "data_type": "float16", "format": "NC1HWC0"},
+      {"name": "updates",  "type": "float16", "shape": [32, 2, 32, 128, 16], "data_type": "float16", "format": "NC1HWC0"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "float16", "shape": [1, 1, 1, 1, 16],     "data_type": "float16", "format": "NC1HWC0"}
+    ]
+  },
+  {
+    "case_name": "dim_32_1024_fp32",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "float32", "shape": [32, 1024], "data_type": "float32", "format": "ND"},
+      {"name": "features", "type": "float32", "shape": [32, 1024], "data_type": "float32", "format": "ND"},
+      {"name": "weights",  "type": "float32", "shape": [1],        "data_type": "float32", "format": "ND"},
+      {"name": "updates",  "type": "float32", "shape": [32, 1024], "data_type": "float32", "format": "ND"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "float32", "shape": [1],        "data_type": "float32", "format": "ND"}
+    ]
+  },
+  {
+    "case_name": "dim_20_32_125_fp32",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "float32", "shape": [20, 32, 125], "data_type": "float32", "format": "ND"},
+      {"name": "features", "type": "float32", "shape": [20, 32, 125], "data_type": "float32", "format": "ND"},
+      {"name": "weights",  "type": "float32", "shape": [1],           "data_type": "float32", "format": "ND"},
+      {"name": "updates",  "type": "float32", "shape": [20, 32, 125], "data_type": "float32", "format": "ND"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "float32", "shape": [1],           "data_type": "float32", "format": "ND"}
+    ]
+  },
+  {
+    "case_name": "dim_32_10_32_128_fp32",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "float32", "shape": [32, 10, 32, 128], "data_type": "float32", "format": "ND"},
+      {"name": "features", "type": "float32", "shape": [32, 10, 32, 128], "data_type": "float32", "format": "ND"},
+      {"name": "weights",  "type": "float32", "shape": [1],               "data_type": "float32", "format": "ND"},
+      {"name": "updates",  "type": "float32", "shape": [32, 10, 32, 128], "data_type": "float32", "format": "ND"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "float32", "shape": [1],               "data_type": "float32", "format": "ND"}
+    ]
+  },
+  {
+    "case_name": "dim_32_2_32_128_16_fp32",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "float32", "shape": [32, 2, 32, 128, 16], "data_type": "float32", "format": "NC1HWC0"},
+      {"name": "features", "type": "float32", "shape": [32, 2, 32, 128, 16], "data_type": "float32", "format": "NC1HWC0"},
+      {"name": "weights",  "type": "float32", "shape": [1, 1, 1, 1, 16],     "data_type": "float32", "format": "NC1HWC0"},
+      {"name": "updates",  "type": "float32", "shape": [32, 2, 32, 128, 16], "data_type": "float32", "format": "NC1HWC0"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "float32", "shape": [1, 1, 1, 1, 16],     "data_type": "float32", "format": "NC1HWC0"}
+    ]
+  },
+  {
+    "case_name": "dim_32_1024_bf16",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "bfloat16", "shape": [32, 1024], "data_type": "bfloat16", "format": "ND"},
+      {"name": "features", "type": "bfloat16", "shape": [32, 1024], "data_type": "bfloat16", "format": "ND"},
+      {"name": "weights",  "type": "bfloat16", "shape": [1],        "data_type": "bfloat16", "format": "ND"},
+      {"name": "updates",  "type": "bfloat16", "shape": [32, 1024], "data_type": "bfloat16", "format": "ND"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "bfloat16", "shape": [1],        "data_type": "bfloat16", "format": "ND"}
+    ]
+  },
+  {
+    "case_name": "dim_32_10_32_128_bf16",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "bfloat16", "shape": [32, 10, 32, 128], "data_type": "bfloat16", "format": "ND"},
+      {"name": "features", "type": "bfloat16", "shape": [32, 10, 32, 128], "data_type": "bfloat16", "format": "ND"},
+      {"name": "weights",  "type": "bfloat16", "shape": [1],               "data_type": "bfloat16", "format": "ND"},
+      {"name": "updates",  "type": "bfloat16", "shape": [32, 10, 32, 128], "data_type": "bfloat16", "format": "ND"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "bfloat16", "shape": [1],               "data_type": "bfloat16", "format": "ND"}
+    ]
+  },
+  {
+    "case_name": "dim_32_2_32_128_16_bf16",
+    "op": "PReluGradReduce",
+    "input_desc": [
+      {"name": "grads",    "type": "bfloat16", "shape": [32, 2, 32, 128, 16], "data_type": "bfloat16", "format": "NC1HWC0"},
+      {"name": "features", "type": "bfloat16", "shape": [32, 2, 32, 128, 16], "data_type": "bfloat16", "format": "NC1HWC0"},
+      {"name": "weights",  "type": "bfloat16", "shape": [1, 1, 1, 1, 16],     "data_type": "bfloat16", "format": "NC1HWC0"},
+      {"name": "updates",  "type": "bfloat16", "shape": [32, 2, 32, 128, 16], "data_type": "bfloat16", "format": "NC1HWC0"}
+    ],
+    "output_desc": [
+      {"name": "da",       "type": "bfloat16", "shape": [1, 1, 1, 1, 16],     "data_type": "bfloat16", "format": "NC1HWC0"}
+    ]
+  }
+]
