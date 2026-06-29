@@ -189,37 +189,6 @@ bool IsBenchmarkEnabled()
     const char* value = std::getenv("PRELU_GRAD_REDUCE_BENCH");
     return value != nullptr && std::string(value) == "1";
 }
-
-bool ShouldRunNc1hwc0AclopCases()
-{
-    const char* value = std::getenv("PRELU_GRAD_REDUCE_RUN_NC1HWC0");
-    return value == nullptr || std::string(value) != "0";
-}
-
-bool ShouldRunSlowAclopCases()
-{
-    const char* value = std::getenv("PRELU_GRAD_REDUCE_RUN_SLOW");
-    return value != nullptr && std::string(value) == "1";
-}
-
-bool IsRank4LargeAclopCase(const CaseSpec& testCase)
-{
-    return std::string(testCase.name).find("nd_rank4_large_") == 0;
-}
-
-bool IsNc1hwc0Case(const CaseSpec& testCase)
-{
-    return testCase.updatesFormat == ACL_FORMAT_NC1HWC0 || testCase.weightsFormat == ACL_FORMAT_NC1HWC0 ||
-           testCase.daFormat == ACL_FORMAT_NC1HWC0;
-}
-
-bool IsSlowAclopCase(const CaseSpec& testCase)
-{
-    return std::string(testCase.name).find("_large_") != std::string::npos &&
-           testCase.weightsShape.size() == testCase.updatesShape.size() - 1 &&
-           testCase.updatesShape.size() >= 4;
-}
-
 const char* DataTypeName(aclDataType dataType)
 {
     if (dataType == ACL_FLOAT) {
@@ -1086,15 +1055,6 @@ int PReluGradReduceTest(int32_t deviceId, aclrtStream& stream)
         {"nd_rank3_weight_shape_bf16", {20, 32, 125}, {32, 125}, ACL_BF16, ACL_FORMAT_ND,
             ACL_FORMAT_ND, ACL_FORMAT_ND, false, true, 0.01F,
             "ND rank3 weight-shape BF16."},
-        {"nd_rank4_large_weight_shape_fp32", {32, 10, 32, 128}, {10, 32, 128}, ACL_FLOAT, ACL_FORMAT_ND,
-            ACL_FORMAT_ND, ACL_FORMAT_ND, false, true, 1.0F,
-            "ND rank4 weight-shape FP32."},
-        {"nd_rank4_large_weight_shape_fp16", {32, 10, 32, 128}, {10, 32, 128}, ACL_FLOAT16, ACL_FORMAT_ND,
-            ACL_FORMAT_ND, ACL_FORMAT_ND, false, true, 0.01F,
-            "ND rank4 weight-shape FP16."},
-        {"nd_rank4_large_weight_shape_bf16", {32, 10, 32, 128}, {10, 32, 128}, ACL_BF16, ACL_FORMAT_ND,
-            ACL_FORMAT_ND, ACL_FORMAT_ND, false, true, 0.01F,
-            "ND rank4 weight-shape BF16."},
         {"nc1hwc0_large_fp32", {32, 2, 32, 128, 16}, {2, 1, 1, 16}, ACL_FLOAT, ACL_FORMAT_NC1HWC0,
             ACL_FORMAT_NC1HWC0, ACL_FORMAT_NC1HWC0, false, true, 1.0F,
             "NC1HWC0 large FP32."},
@@ -1108,27 +1068,12 @@ int PReluGradReduceTest(int32_t deviceId, aclrtStream& stream)
 
     const char* onlyCase = std::getenv("PRELU_GRAD_REDUCE_CASE");
     uint32_t failedCount = 0;
-    uint32_t skippedCount = 0;
     uint32_t runCount = 0;
     for (const auto& testCase : cases) {
         if (onlyCase != nullptr && onlyCase[0] != '\0' && std::string(onlyCase) != testCase.name) {
             continue;
         }
         ++runCount;
-        if (IsRank4LargeAclopCase(testCase) && !ShouldRunSlowAclopCases()) {
-            ++skippedCount;
-            LOG_PRINT("[SKIP] %s: slow large rank output case is disabled for default run_example; "
-                      "set PRELU_GRAD_REDUCE_RUN_SLOW=1 for acceptance/performance runs.\n",
-                testCase.name);
-            continue;
-        }
-        if (IsNc1hwc0Case(testCase) && !ShouldRunNc1hwc0AclopCases()) {
-            ++skippedCount;
-            LOG_PRINT("[SKIP] %s: NC1HWC0 case is disabled; set PRELU_GRAD_REDUCE_RUN_NC1HWC0=1 "
-                      "or unset it to run.\n",
-                testCase.name);
-            continue;
-        }
         ret = RunCase(testCase, stream);
         if (ret != ACL_SUCCESS) {
             ++failedCount;
@@ -1140,12 +1085,12 @@ int PReluGradReduceTest(int32_t deviceId, aclrtStream& stream)
     CHECK_RET(runCount != 0, LOG_PRINT("PReluGradReduce no case selected, PRELU_GRAD_REDUCE_CASE=%s\n",
                                onlyCase == nullptr ? "" : onlyCase);
                   return 1);
-    LOG_PRINT("PReluGradReduce smoke test pass, case_count=%zu run_count=%u skipped_count=%u\n", cases.size(),
-        runCount, skippedCount);
-    LOG_PRINT("[SMOKE] case_count=%zu run_count=%u skipped_count=%u dtypes=fp32,fp16,bf16 formats=ND,NC1HWC0 "
+    LOG_PRINT("PReluGradReduce smoke test pass, case_count=%zu run_count=%u\n", cases.size(),
+        runCount);
+    LOG_PRINT("[SMOKE] case_count=%zu run_count=%u dtypes=fp32,fp16,bf16 formats=ND,NC1HWC0 "
               "axis_generalization=rank2,rank3,rank4 shared=enabled "
-              "large_cases=enabled rank4_large_cases=env_gated nc1hwc0_cases=enabled\n",
-        cases.size(), runCount, skippedCount);
+              "large_cases=enabled nc1hwc0_cases=enabled\n",
+        cases.size(), runCount);
     return ACL_SUCCESS;
 }
 

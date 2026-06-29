@@ -183,14 +183,7 @@ private:
             return;
         }
 
-        // 1) 清零同步区（覆盖本次实际参与同步的 cn 个核对应的区域即可）
-        uint32_t syncElems = cn * 8; // cn*32B / sizeof(int32_t)
-        for (uint32_t i = 0; i < syncElems; ++i) {
-            syncGm_.SetValue(i, 0);
-        }
-        AscendC::PipeBarrier<PIPE_MTE3>();
-
-        // 2) 均分 totalLength_，按对齐边界切块，最后一核兜底吃掉尾部
+        // 1) 均分 totalLength_，按对齐边界切块，最后一核兜底吃掉尾部
         uint32_t align = (dtypeMode_ == DTYPE_MODE_FP32) ? FP32_DA_ALIGN : DA_ALIGN;
         uint32_t base = totalLength_ / cn;
         base = (base / align) * align;
@@ -215,11 +208,10 @@ private:
         partialSumGm_.SetValue(blockIdx, partialSum);
         AscendC::PipeBarrier<PIPE_MTE3>();
 
-        // 3) 跨核同步：等所有核都完成清零 + 写局部和
-        AscendC::LocalTensor<int32_t> ubSync = syncUbBuf_.Get<int32_t>();
-        AscendC::SyncAll<true>(syncGm_, ubSync, static_cast<int32_t>(cn));
+        // 2) 硬同步：等所有核都完成局部和写入
+        AscendC::SyncAll<true>();
 
-        // 4) 仅 core0 汇总并写最终结果
+        // 3) 仅 core0 汇总并写最终结果
         if (blockIdx == 0) {
             float total = 0.0F;
             for (uint32_t i = 0; i < cn; ++i) {
@@ -550,13 +542,6 @@ private:
         uint32_t channel = blockIdx / reduceSplit;
         uint32_t reduceSlice = blockIdx - channel * reduceSplit;
         if (channel >= outputLength_) return;
-
-        uint32_t syncElems = cn * 8;
-        for (uint32_t i = 0; i < syncElems; ++i) {
-            syncGm_.SetValue(i, 0);
-        }
-        AscendC::PipeBarrier<PIPE_MTE3>();
-
         uint32_t reduceElems = n_ * h_ * w_;
         uint32_t elemsPerSlice = (reduceElems + reduceSplit - 1) / reduceSplit;
         uint32_t elemStart = reduceSlice * elemsPerSlice;
@@ -570,9 +555,7 @@ private:
         }
         partialSumGm_.SetValue(channel * reduceSplit + reduceSlice, partial);
         AscendC::PipeBarrier<PIPE_MTE3>();
-
-        AscendC::LocalTensor<int32_t> ubSync = syncUbBuf_.Get<int32_t>();
-        AscendC::SyncAll<true>(syncGm_, ubSync, static_cast<int32_t>(cn));
+        AscendC::SyncAll<true>();
 
         if (reduceSlice == 0) {
             float total = 0.0F;
