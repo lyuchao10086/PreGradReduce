@@ -1,0 +1,7 @@
+
+# OpenCode 配置
+.opencode/
+
+# Local IDE/runtime artifacts
+.arts/.env
+.vscode/.cache/
